@@ -1,0 +1,117 @@
+body {
+  font-family: 'Georgia', serif;
+  background-color: #fdf6f0;
+  color: #2d2d2d;
+  margin: 0;
+  padding: 0;
+}
+
+/* NAV */
+.top-nav {
+  background-color: #c0392b;
+  padding: 1rem 2rem;
+}
+.top-nav a {
+  color: #ffffff;
+  text-decoration: none;
+  font-family: 'Arial', sans-serif;
+  font-size: 1rem;
+  margin-right: 1.5rem;
+}
+.top-nav a:hover {
+  text-decoration: underline;
+}
+
+/* HEADER */
+.page-header {
+  background-color: #c0392b;
+  color: white;
+  text-align: center;
+  padding: 50px 20px 40px;
+}
+.page-header h1 {
+  font-family: 'Arial', sans-serif;
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+.page-header p {
+  font-size: 1.1rem;
+  color: #fddede;
+}
+
+/* SECTIONS */
+.section {
+  max-width: 860px;
+  margin: 2.5rem auto;
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+.section h2 {
+  font-family: 'Arial', sans-serif;
+  color: #c0392b;
+  border-bottom: 2px solid #f0e0e0;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.2rem;
+}
+.section p {
+  line-height: 1.8;
+  color: #444;
+}
+
+/* PLATFORM CARDS */
+.platform-grid {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+.platform-card {
+  flex: 1;
+  min-width: 200px;
+  background-color: #fdf6f0;
+  border-left: 4px solid #c0392b;
+  border-radius: 6px;
+  padding: 1rem 1.25rem;
+}
+.platform-card h3 {
+  font-family: 'Arial', sans-serif;
+  color: #c0392b;
+  margin-bottom: 0.5rem;
+}
+
+/* IMAGE */
+.page-image {
+  width: 100%;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+/* VIDEO */
+.video-wrapper {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+.video-wrapper iframe {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* FOOTER */
+.page-footer {
+  background-color: #2d2d2d;
+  color: #aaaaaa;
+  text-align: center;
+  padding: 1.5rem;
+  font-family: 'Arial', sans-serif;
+  font-size: 0.85rem;
+  margin-top: 3rem;
+}
