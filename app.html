@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aura Color Quiz</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background-color: #f9f4ff; font-family: 'Segoe UI', sans-serif; color: #2d2d2d; }
+    .quiz-wrap { max-width: 600px; margin: 0 auto; padding: 2rem 1rem; }
+    h1 { font-size: 2rem; font-weight: 700; color: #534AB7; margin-bottom: 0.25rem; }
+    .subtitle { font-size: 1rem; color: #888; margin-bottom: 1.5rem; }
+    .progress-bar { height: 4px; background: #e0d9f7; border-radius: 2px; margin-bottom: 1.5rem; }
+    .progress-fill { height: 4px; background: #7F77DD; border-radius: 2px; transition: width 0.3s; }
+    .q-card { background: #ffffff; border: 1px solid #e8e4f7; border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+    .q-label { font-size: 13px; color: #999; margin-bottom: 0.5rem; }
+    .q-text { font-size: 1.1rem; font-weight: 600; margin-bottom: 1.25rem; }
+    .options { display: grid; gap: 8px; }
+    .opt { background: #f9f4ff; border: 1px solid #e0d9f7; border-radius: 8px; padding: 10px 14px; font-size: 14px; color: #2d2d2d; cursor: pointer; text-align: left; transition: border-color 0.15s; }
+    .opt:hover { border-color: #7F77DD; }
+    .opt.selected { border: 2px solid #7F77DD; background: #EEEDFE; color: #3C3489; font-weight: 600; }
+    .btn { background: #7F77DD; color: white; border: none; border-radius: 8px; padding: 12px 28px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 1rem; }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .result-card { background: #ffffff; border: 1px solid #e8e4f7; border-radius: 12px; padding: 2rem; text-align: center; }
+    .aura-circle { width: 100px; height: 100px; border-radius: 50%; margin: 0 auto 1.25rem; display: flex; align-items: center; justify-content: center; font-size: 40px; }
+    .aura-name { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .aura-desc { font-size: 15px; color: #555; line-height: 1.7; margin-bottom: 1.25rem; }
+    .aura-traits { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 1.5rem; }
+    .trait { font-size: 12px; padding: 4px 14px; border-radius: 20px; font-weight: 600; }
+    .restart-btn { background: #f9f4ff; color: #534AB7; border: 1px solid #e0d9f7; border-radius: 8px; padding: 10px 24px; font-size: 14px; cursor: pointer; margin-top: 0.5rem; }
+    .nav { background: #534AB7; padding: 1rem 2rem; }
+    .nav a { color: white; text-decoration: none; font-size: 0.95rem; }
+    .nav a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <div class="nav">
+    <a href="scratch.html">← Back to Social Media Guide</a>
+  </div>
+
+  <div class="quiz-wrap">
+    <h1>What's your aura color?</h1>
+    <p class="subtitle">Answer 5 questions to discover your energy.</p>
+
+    <div id="quiz-screen">
+      <div class="progress-bar"><div class="progress-fill" id="progress" style="width: 0%"></div></div>
+      <div id="question-area"></div>
+      <button class="btn" id="next-btn" disabled onclick="nextQuestion()">Next →</button>
+    </div>
+
+    <div id="result-screen" style="display:none;"></div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        q: "When you walk into a room full of strangers, you...",
+        opts: [
+          { text: "Introduce yourself to everyone immediately", scores: { red: 2, yellow: 1 } },
+          { text: "Find one interesting person and go deep", scores: { indigo: 2, purple: 1 } },
+          { text: "Observe the room before making a move", scores: { blue: 2, green: 1 } },
+          { text: "Hang near the snacks and vibe", scores: { green: 2, orange: 1 } }
+        ]
+      },
+      {
+        q: "Your ideal Saturday looks like...",
+        opts: [
+          { text: "Hiking, sports, or something active outside", scores: { red: 2, orange: 1 } },
+          { text: "A long journaling session or quiet creative time", scores: { purple: 2, indigo: 1 } },
+          { text: "Helping a friend move or cooking for people", scores: { green: 2, blue: 1 } },
+          { text: "A cozy day learning something new", scores: { yellow: 2, indigo: 1 } }
+        ]
+      },
+      {
+        q: "When you're stressed, you tend to...",
+        opts: [
+          { text: "Take action — do something, anything", scores: { red: 2, orange: 1 } },
+          { text: "Talk it out with someone close", scores: { blue: 2, green: 1 } },
+          { text: "Go quiet and process alone", scores: { purple: 2, indigo: 1 } },
+          { text: "Make a plan and organize your thoughts", scores: { yellow: 2, blue: 1 } }
+        ]
+      },
+      {
+        q: "People who know you best would describe you as...",
+        opts: [
+          { text: "Bold, driven, and magnetic", scores: { red: 2, orange: 1 } },
+          { text: "Warm, loyal, and grounding", scores: { green: 2, blue: 1 } },
+          { text: "Thoughtful, mysterious, and deep", scores: { indigo: 2, purple: 1 } },
+          { text: "Bright, curious, and full of ideas", scores: { yellow: 2, orange: 1 } }
+        ]
+      },
+      {
+        q: "What matters most to you right now?",
+        opts: [
+          { text: "Achieving something meaningful", scores: { red: 2, yellow: 1 } },
+          { text: "Deep, genuine connection with others", scores: { blue: 2, green: 1 } },
+          { text: "Understanding yourself on a deeper level", scores: { purple: 2, indigo: 1 } },
+          { text: "Living freely and enjoying the moment", scores: { orange: 2, green: 1 } }
+        ]
+      }
+    ];
+
+    const auras = {
+      red: { name: "Red Aura", emoji: "🔴", bg: "#FAECE7", color: "#993C1D", traitBg: "#F5C4B3", traitColor: "#712B13", desc: "You radiate passion, power, and unstoppable drive. Red auras belong to natural leaders who feel deeply and act boldly. You bring intensity and life to every room you enter.", traits: ["Driven", "Passionate", "Magnetic", "Fearless"] },
+      orange: { name: "Orange Aura", emoji: "🟠", bg: "#FAEEDA", color: "#854F0B", traitBg: "#FAC775", traitColor: "#633806", desc: "You're a free spirit with an infectious zest for life. Orange auras are creative, adventurous, and always down for a good time. You bring joy and spontaneity wherever you go.", traits: ["Adventurous", "Creative", "Joyful", "Free-spirited"] },
+      yellow: { name: "Yellow Aura", emoji: "🌟", bg: "#FFFDE7", color: "#854F0B", traitBg: "#FAC775", traitColor: "#633806", desc: "Your energy is bright, curious, and mentally sharp. Yellow auras are the intellectuals and innovators — always learning, always questioning, always a few steps ahead.", traits: ["Curious", "Optimistic", "Intellectual", "Innovative"] },
+      green: { name: "Green Aura", emoji: "🍃", bg: "#EAF3DE", color: "#3B6D11", traitBg: "#C0DD97", traitColor: "#27500A", desc: "You are a grounding, healing presence in people's lives. Green auras are nurturing, balanced, and deeply connected to nature and community. People feel safe around you.", traits: ["Nurturing", "Grounded", "Empathetic", "Balanced"] },
+      blue: { name: "Blue Aura", emoji: "💙", bg: "#E6F1FB", color: "#185FA5", traitBg: "#B5D4F4", traitColor: "#0C447C", desc: "You're a calm, trustworthy soul with a gift for communication. Blue auras are emotionally intelligent and deeply loyal — the person everyone turns to when they need real support.", traits: ["Calm", "Loyal", "Communicative", "Trustworthy"] },
+      indigo: { name: "Indigo Aura", emoji: "🔮", bg: "#EEEDFE", color: "#534AB7", traitBg: "#CECBF6", traitColor: "#3C3489", desc: "You're an old soul with deep intuition and a rich inner world. Indigo auras are perceptive, empathic, and spiritually aware — you often sense things others can't explain.", traits: ["Intuitive", "Perceptive", "Deep", "Wise"] },
+      purple: { name: "Purple Aura", emoji: "💜", bg: "#F5EEFF", color: "#6B3FA0", traitBg: "#DCC8F5", traitColor: "#4B2A72", desc: "You're a visionary with a mystical inner life. Purple auras are dreamers, artists, and seekers — drawn to beauty, meaning, and the magic hidden in everyday moments.", traits: ["Dreamy", "Artistic", "Mystical", "Visionary"] }
+    };
+
+    let current = 0, selected = null;
+    const scores = { red: 0, orange: 0, yellow: 0, green: 0, blue: 0, indigo: 0, purple: 0 };
+
+    function render() {
+      const q = questions[current];
+      document.getElementById('progress').style.width = (current / questions.length * 100) + '%';
+      document.getElementById('question-area').innerHTML = `
+        <div class="q-card">
+          <div class="q-label">Question ${current + 1} of ${questions.length}</div>
+          <div class="q-text">${q.q}</div>
+          <div class="options">${q.opts.map((o, i) => `<button class="opt" onclick="selectOpt(${i})" id="opt-${i}">${o.text}</button>`).join('')}</div>
+        </div>`;
+      selected = null;
+      document.getElementById('next-btn').disabled = true;
+      document.getElementById('next-btn').textContent = current === questions.length - 1 ? 'See my aura ✨' : 'Next →';
+    }
+
+    function selectOpt(i) {
+      document.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
+      document.getElementById('opt-' + i).classList.add('selected');
+      selected = i;
+      document.getElementById('next-btn').disabled = false;
+    }
+
+    function nextQuestion() {
+      if (selected === null) return;
+      const optScores = questions[current].opts[selected].scores;
+      for (const [color, pts] of Object.entries(optScores)) scores[color] += pts;
+      current++;
+      if (current < questions.length) { render(); } else { showResult(); }
+    }
+
+    function showResult() {
+      document.getElementById('progress').style.width = '100%';
+      const top = Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0];
+      const aura = auras[top];
+      document.getElementById('quiz-screen').style.display = 'none';
+      document.getElementById('result-screen').style.display = 'block';
+      document.getElementById('result-screen').innerHTML = `
+        <div class="result-card">
+          <div class="aura-circle" style="background:${aura.bg};">${aura.emoji}</div>
+          <div class="aura-name" style="color:${aura.color};">${aura.name}</div>
+          <div class="aura-desc">${aura.desc}</div>
+          <div class="aura-traits">${aura.traits.map(t => `<span class="trait" style="background:${aura.traitBg};color:${aura.traitColor};">${t}</span>`).join('')}</div>
+          <button class="restart-btn" onclick="restart()">Retake quiz</button>
+        </div>`;
+    }
+
+    function restart() {
+      current = 0; selected = null;
+      for (const k in scores) scores[k] = 0;
+      document.getElementById('result-screen').style.display = 'none';
+      document.getElementById('quiz-screen').style.display = 'block';
+      render();
+    }
+
+    render();
+  </script>
+</body>
+</html>
